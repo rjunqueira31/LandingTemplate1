@@ -1,0 +1,19 @@
+{
+  "name": "landingtemplate1",
+  "version": "1.0.0",
+  "description": "Simple landing page served by Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "express",
+    "landing-page"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
