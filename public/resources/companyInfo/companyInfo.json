@@ -1,0 +1,23 @@
+{
+  "companyName": "RR Barber Studio",
+  "companyEmail": "info@rrbarberstudio.com",
+  "companyPhoneNumber": "+351 911111111",
+  "companySchedule": "Segunda a Sexta: 09:00 - 19:00, Sábado: 09:00 - 14:00",
+  "companyAddress": "Rua dos Barbeiros, 123, Bairro dos Cortes",
+  "companyDisclaimer": "2026 Todos os direitos reservados.",
+  "socialMedia": {
+    "whatsapp": "whatsapp.com",
+    "instagram": "instagram.com",
+    "facebook": "facebook.com",
+    "x": "x.com",
+    "linkedin": "",
+    "youtube": "youtube.com",
+    "tiktok": "tiktok.com",
+    "github": "",
+    "pinterest": ""
+  },
+  "sentences": [
+    "Não é só cortar cabelo ... É alinhar a tua aparência com quem tu queres ser",
+    "A barbearia não é só sobre cortes. É sobre pessoas, identidade, confiança e evolução."
+  ]
+}

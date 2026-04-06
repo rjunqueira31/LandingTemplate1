@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Landing Page</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="site-header__inner">
+            <nav class="site-nav" aria-label="Primary">
+                <a class="site-nav__link site-nav__link--active" href="index.html#home">Home</a>
+                <a class="site-nav__link" href="index.html#sobre">Sobre</a>
+                <a class="site-nav__link" href="index.html#servicos">Serviços</a>
+                <a class="site-nav__link" href="index.html#galeria">Galeria</a>
+                <a class="site-nav__link" href="index.html#parceiros">Parceiros</a>
+
+
+            </nav>
+
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
+                aria-label="Open navigation menu">
+                <span class="menu-toggle__line"></span>
+                <span class="menu-toggle__line"></span>
+                <span class="menu-toggle__line"></span>
+            </button>
+        </div>
+
+
+
+        <a class="static-site-brand" href="index.html" aria-label="RR home">
+            <img src="resources/images/companyLogos/RRLogo.png" alt="RR Logo" class="static-logo-image">
+        </a>
+
+        <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile Primary">
+            <a class="mobile-menu__link mobile-menu__link--active" href="index.html#home">Home</a>
+            <a class="mobile-menu__link" href="index.html#sobre">Sobre</a>
+            <a class="mobile-menu__link" href="index.html#servicos">Serviços</a>
+            <a class="mobile-menu__link" href="index.html#galeria">Galeria</a>
+            <a class="mobile-menu__link" href="index.html#parceiros">Parceiros</a>
+        </nav>
+    </header>
+
+    <main class="gallery-page">
+        <section class="page-section gallery-page__section" id="parceiros">
+            <div class="section-heading gallery-page__heading">
+                <p class="page-section__eyebrow">Parceiros</p>
+                <h1 class="page-section__subtitle">Todos os parceiros, organizados em grelha e com ampliacao ao clique.
+                </h1>
+            </div>
+
+            <div class="gallery-grid-page" id="partners-grid" aria-live="polite"></div>
+        </section>
+    </main>
+
+    <div class="gallery-lightbox" id="partners-lightbox" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-label="Imagem ampliada de parceiros">
+        <button class="gallery-lightbox__backdrop" id="partners-lightbox-close" type="button"
+            aria-label="Fechar imagem ampliada"></button>
+
+        <div class="gallery-lightbox__dialog" role="document">
+            <button class="gallery-lightbox__dismiss" id="partners-lightbox-dismiss" type="button"
+                aria-label="Fechar imagem ampliada">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <figure class="gallery-lightbox__figure">
+                <img class="gallery-lightbox__image" id="partners-lightbox-image" alt="">
+                <figcaption class="gallery-lightbox__caption" id="partners-lightbox-caption"></figcaption>
+            </figure>
+        </div>
+    </div>
+
+    <footer class="site-footer-all">
+        <div class="site-footer">
+            <div class="site-footer__inner__info">
+                <h3 class="site-footer__company-name" id="footer-company-name"></h3>
+                <div class="site-footer__info" id="footer-info"></div>
+            </div>
+            <div class="site-footer__inner__socials">
+                <p class="site-footer__social-heading">Segue e contacta-nos nas redes sociais</p>
+                <div class="site-footer__socials" id="footer-socials"></div>
+            </div>
+        </div>
+        <p class="site-footer__disclaimer" id="footer-disclaimer"></p>
+    </footer>
+
+    <a class="whatsapp-float" id="whatsapp-float" href="https://www.whatsapp.com/" aria-label="Open WhatsApp">
+        <img src="resources/images/icons/icons8-whatsapp-50.png" alt="" class="whatsapp-float__icon">
+    </a>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
