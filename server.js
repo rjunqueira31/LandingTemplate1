@@ -5,6 +5,9 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3001;
 const publicDir = path.join(__dirname, 'public');
+const templatesDir = path.join(__dirname, 'templates');
+const collectionPageTemplatePath =
+    path.join(templatesDir, 'collection-page.html');
 const imageCollections = {
   gallery: path.join(publicDir, 'resources/images/gallery'),
   partners: path.join(publicDir, 'resources/images/ProjectsPartners')
@@ -14,7 +17,17 @@ function isImageFile(fileName) {
   return /\.(avif|gif|jpe?g|png|svg|webp)$/i.test(fileName);
 }
 
-app.use(express.static(publicDir));
+function applyTemplateValues(template, values) {
+  return Object.entries(values).reduce((result, [key, value]) => {
+    return result.replaceAll(`{{${key}}}`, value);
+  }, template);
+}
+
+async function renderCollectionPage(config) {
+  const template = await fs.readFile(collectionPageTemplatePath, 'utf8');
+
+  return applyTemplateValues(template, config);
+}
 
 app.get('/api/images/:collection', async (req, res) => {
   const directory = imageCollections[req.params.collection];
@@ -45,13 +58,47 @@ app.get('/', (_req, res) => {
   res.sendFile(path.join(publicDir, 'index.html'));
 });
 
-app.get('/gallery', (_req, res) => {
-  res.sendFile(path.join(publicDir, 'gallery.html'));
+app.get(['/gallery', '/gallery.html'], async (_req, res, next) => {
+  try {
+    res.send(await renderCollectionPage({
+      sectionId: 'galeria',
+      eyebrow: 'Galeria',
+      subtitle:
+          'Todas as imagens da galeria, organizadas em grelha e com ampliacao ao clique.',
+      gridId: 'gallery-grid',
+      lightboxId: 'gallery-lightbox',
+      lightboxCloseId: 'gallery-lightbox-close',
+      lightboxDismissId: 'gallery-lightbox-dismiss',
+      lightboxImageId: 'gallery-lightbox-image',
+      lightboxCaptionId: 'gallery-lightbox-caption',
+      lightboxLabel: 'Imagem ampliada da galeria'
+    }));
+  } catch (error) {
+    next(error);
+  }
 });
 
-app.get('/partners', (_req, res) => {
-  res.sendFile(path.join(publicDir, 'partners.html'));
+app.get(['/partners', '/partners.html'], async (_req, res, next) => {
+  try {
+    res.send(await renderCollectionPage({
+      sectionId: 'parceiros',
+      eyebrow: 'Parceiros',
+      subtitle:
+          'Todos os parceiros, organizados em grelha e com ampliacao ao clique.',
+      gridId: 'partners-grid',
+      lightboxId: 'partners-lightbox',
+      lightboxCloseId: 'partners-lightbox-close',
+      lightboxDismissId: 'partners-lightbox-dismiss',
+      lightboxImageId: 'partners-lightbox-image',
+      lightboxCaptionId: 'partners-lightbox-caption',
+      lightboxLabel: 'Imagem ampliada de parceiros'
+    }));
+  } catch (error) {
+    next(error);
+  }
 });
+
+app.use(express.static(publicDir));
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

@@ -12,13 +12,11 @@
     <header class="site-header">
         <div class="site-header__inner">
             <nav class="site-nav" aria-label="Primary">
-                <a class="site-nav__link site-nav__link--active" href="index.html#home">Home</a>
+                <a class="site-nav__link" href="index.html#home">Home</a>
                 <a class="site-nav__link" href="index.html#sobre">Sobre</a>
                 <a class="site-nav__link" href="index.html#servicos">Serviços</a>
                 <a class="site-nav__link" href="index.html#galeria">Galeria</a>
                 <a class="site-nav__link" href="index.html#parceiros">Parceiros</a>
-
-
             </nav>
 
             <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
@@ -29,14 +27,12 @@
             </button>
         </div>
 
-
-
-        <a class="static-site-brand" href="index.html" aria-label="RR home">
-            <img src="resources/images/companyLogos/RRLogo.png" alt="RR Logo" class="static-logo-image">
+        <a class="static-site-brand" href="index.html" aria-label="home">
+            <img src="resources/images/companyLogos/Logo.png" alt="Logo" class="static-logo-image">
         </a>
 
         <nav class="mobile-menu" id="mobile-menu" aria-label="Mobile Primary">
-            <a class="mobile-menu__link mobile-menu__link--active" href="index.html#home">Home</a>
+            <a class="mobile-menu__link" href="index.html#home">Home</a>
             <a class="mobile-menu__link" href="index.html#sobre">Sobre</a>
             <a class="mobile-menu__link" href="index.html#servicos">Serviços</a>
             <a class="mobile-menu__link" href="index.html#galeria">Galeria</a>
@@ -45,31 +41,30 @@
     </header>
 
     <main class="gallery-page">
-        <section class="page-section gallery-page__section" id="galeria">
+        <section class="page-section gallery-page__section" id="{{sectionId}}">
             <div class="section-heading gallery-page__heading">
-                <p class="page-section__eyebrow">Galeria</p>
-                <h1 class="page-section__subtitle">Todas as imagens da galeria, organizadas em grelha e com ampliacao ao
-                    clique.</h1>
+                <p class="page-section__eyebrow">{{eyebrow}}</p>
+                <h1 class="page-section__subtitle">{{subtitle}}</h1>
             </div>
 
-            <div class="gallery-grid-page" id="gallery-grid" aria-live="polite"></div>
+            <div class="gallery-grid-page" id="{{gridId}}" aria-live="polite"></div>
         </section>
     </main>
 
-    <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true"
-        aria-label="Imagem ampliada da galeria">
-        <button class="gallery-lightbox__backdrop" id="gallery-lightbox-close" type="button"
+    <div class="gallery-lightbox" id="{{lightboxId}}" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-label="{{lightboxLabel}}">
+        <button class="gallery-lightbox__backdrop" id="{{lightboxCloseId}}" type="button"
             aria-label="Fechar imagem ampliada"></button>
 
         <div class="gallery-lightbox__dialog" role="document">
-            <button class="gallery-lightbox__dismiss" id="gallery-lightbox-dismiss" type="button"
+            <button class="gallery-lightbox__dismiss" id="{{lightboxDismissId}}" type="button"
                 aria-label="Fechar imagem ampliada">
                 <span aria-hidden="true">&times;</span>
             </button>
 
             <figure class="gallery-lightbox__figure">
-                <img class="gallery-lightbox__image" id="gallery-lightbox-image" alt="">
-                <figcaption class="gallery-lightbox__caption" id="gallery-lightbox-caption"></figcaption>
+                <img class="gallery-lightbox__image" id="{{lightboxImageId}}" alt="">
+                <figcaption class="gallery-lightbox__caption" id="{{lightboxCaptionId}}"></figcaption>
             </figure>
         </div>
     </div>
@@ -80,8 +75,15 @@
                 <h3 class="site-footer__company-name" id="footer-company-name"></h3>
                 <div class="site-footer__info" id="footer-info"></div>
             </div>
+            <div class="site-footer__inner__links">
+                <h3 class="site-footer__links-heading">Outros Links</h3>
+                <div class="site-footer__links">
+                    <a href="gallery.html">Galeria Completa</a>
+                    <a href="partners.html">Parceiros Completos</a>
+                </div>
+            </div>
             <div class="site-footer__inner__socials">
-                <p class="site-footer__social-heading">Segue e contacta-nos nas redes sociais</p>
+                <h3 class="site-footer__social-heading">Segue e contacta-nos nas redes sociais</h3>
                 <div class="site-footer__socials" id="footer-socials"></div>
             </div>
         </div>
