@@ -59,6 +59,7 @@ let galleryImagesPromise;
 let partnerImagesPromise;
 const homepageGalleryLimit = 9;
 const homepagePartnersLimit = 3;
+const hoverDescriptionMaxCharacters = 110;
 const socialIconMap = {
   whatsapp: 'resources/images/icons/icons8-whatsapp-50.png',
   instagram: 'resources/images/icons/icons8-instagram-50.png',
@@ -207,6 +208,8 @@ async function loadCompanyInfo() {
     }
 
     if (footerInfo) {
+      footerInfo.innerHTML = '';
+
       if (companyInfo.companyPhoneNumber) {
         let companyPhone = document.createElement('p');
         companyPhone.textContent = companyInfo.companyPhoneNumber;
@@ -269,6 +272,12 @@ async function loadCompanyInfo() {
         whatsappFloat.href = whatsappUrl;
       }
     }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        updateWhatsappFloatPosition();
+      });
+    });
   } catch (error) {
     console.error(error);
   }
@@ -336,24 +345,48 @@ function getWrappedOffset(index, activeIndex, totalSlides) {
   return rawOffset;
 }
 
-function getGalleryStep() {
+function getGallerySlideGap() {
   const viewportWidth =
       galleryCarouselViewport?.clientWidth || window.innerWidth;
-  const activeSlide = galleryCarouselTrack?.querySelector(
-      `.gallery-carousel__slide[data-index="${activeGallerySlideIndex}"]`);
-  const activeSlideWidth =
-      activeSlide?.getBoundingClientRect().width || viewportWidth * 0.24;
-  const visibleOffsetLimit = getGalleryVisibleOffsetLimit();
 
-  if (visibleOffsetLimit === 0) {
+  return Math.max(24, Math.min(36, viewportWidth * 0.035));
+}
+
+function getGallerySlideWidth(slide) {
+  const viewportWidth =
+      galleryCarouselViewport?.clientWidth || window.innerWidth;
+
+  return slide?.offsetWidth || slide?.scrollWidth || viewportWidth * 0.24;
+}
+
+function getGalleryTranslateX(slides, offset, totalSlides) {
+  if (offset === 0) {
     return 0;
   }
 
-  if (visibleOffsetLimit === 1) {
-    return Math.min(viewportWidth * 0.31, activeSlideWidth * 1.04);
+  const direction = Math.sign(offset);
+  const steps = Math.abs(offset);
+  const gap = getGallerySlideGap();
+  let distance = 0;
+
+  for (let stepIndex = 1; stepIndex <= steps; stepIndex += 1) {
+    const previousOffset = direction * (stepIndex - 1);
+    const currentOffset = direction * stepIndex;
+    const previousSlideIndex =
+        (activeGallerySlideIndex + previousOffset + totalSlides) % totalSlides;
+    const currentSlideIndex =
+        (activeGallerySlideIndex + currentOffset + totalSlides) % totalSlides;
+    const previousSlide = slides[previousSlideIndex];
+    const currentSlide = slides[currentSlideIndex];
+    const previousWidth =
+        getGallerySlideWidth(previousSlide) * getGalleryScale(previousOffset);
+    const currentWidth =
+        getGallerySlideWidth(currentSlide) * getGalleryScale(currentOffset);
+
+    distance += (previousWidth / 2) + (currentWidth / 2) + gap;
   }
 
-  return Math.min(viewportWidth * 0.2, activeSlideWidth * 0.9);
+  return direction * distance;
 }
 
 function getHomepageGalleryImages() {
@@ -432,6 +465,11 @@ function renderGallerySlides() {
     slide.className = 'gallery-carousel__slide';
     slide.dataset.index = String(index);
 
+    const button = document.createElement('button');
+    button.className = 'gallery-carousel__slide-button';
+    button.type = 'button';
+    button.setAttribute('aria-label', `Expandir ${image.label}`);
+
     const img = document.createElement('img');
     img.className = 'gallery-carousel__slide-image';
     img.src = image.src;
@@ -441,18 +479,41 @@ function renderGallerySlides() {
       updateGalleryCarousel();
     });
 
-    const caption = document.createElement('figcaption');
-    caption.className = 'gallery-carousel__slide-caption';
-    caption.textContent = image.label;
+    const description = document.createElement('figcaption');
+    description.className = 'gallery-carousel__slide-description';
+    description.textContent =
+        getPreviewDescription(getGalleryDescription(image.fileName));
 
-    slide.appendChild(img);
-    slide.appendChild(caption);
+    button.appendChild(img);
+    button.appendChild(description);
+    button.addEventListener('click', () => {
+      openGalleryLightbox(image);
+    });
+
+    slide.appendChild(button);
     galleryCarouselTrack.appendChild(slide);
   });
 }
 
 function getGalleryDescription(fileName) {
   return getDescriptionByFileName(fileName, galleryImageDescriptions);
+}
+
+function getPreviewDescription(
+    text, maxCharacters = hoverDescriptionMaxCharacters) {
+  if (!text) {
+    return '';
+  }
+
+  const normalizedText = text.replace(/\s+/g, ' ').trim();
+
+  if (normalizedText.length <= maxCharacters) {
+    return normalizedText;
+  }
+
+  const previewText = normalizedText.slice(0, maxCharacters).trimEnd();
+
+  return `${previewText}...`;
 }
 
 function getPartnerDescription(target) {
@@ -615,7 +676,8 @@ function renderGalleryGrid() {
 
     const description = document.createElement('figcaption');
     description.className = 'gallery-grid-page__description';
-    description.textContent = getGalleryDescription(image.fileName);
+    description.textContent =
+        getPreviewDescription(getGalleryDescription(image.fileName));
 
     button.appendChild(img);
     button.appendChild(description);
@@ -688,7 +750,7 @@ function renderImageGrid(container, images, getDescription, onOpenLightbox) {
 
     const description = document.createElement('figcaption');
     description.className = 'gallery-grid-page__description';
-    description.textContent = getDescription(image);
+    description.textContent = getPreviewDescription(getDescription(image));
 
     button.appendChild(img);
     button.appendChild(description);
@@ -747,7 +809,6 @@ function updateGalleryCarousel() {
       galleryCarouselTrack.querySelectorAll('.gallery-carousel__slide'));
   const totalSlides = slides.length;
   const visibleOffsetLimit = getGalleryVisibleOffsetLimit();
-  const step = getGalleryStep();
   const viewportRect = galleryCarouselViewport.getBoundingClientRect();
   const trackRect = galleryCarouselTrack.getBoundingClientRect();
   const viewportCenterX =
@@ -759,7 +820,7 @@ function updateGalleryCarousel() {
     const absoluteOffset = Math.abs(offset);
     const scale = getGalleryScale(offset);
     const opacity = getGalleryOpacity(offset);
-    const translateX = offset * step;
+    const translateX = getGalleryTranslateX(slides, offset, totalSlides);
     const isVisible = absoluteOffset <= visibleOffsetLimit;
 
     slide.style.left = `${viewportCenterX}px`;
@@ -865,11 +926,13 @@ async function initializeGalleryCarousel() {
     return;
   }
 
-  await loadGalleryImages();
+  await Promise.all([loadGalleryImages(), loadGalleryDescriptions()]);
   updateSectionLinksVisibility();
   renderGallerySlides();
   showGallerySlide(0);
   initializeGallerySwipe();
+  galleryLightboxClose?.addEventListener('click', closeGalleryLightbox);
+  galleryLightboxDismiss?.addEventListener('click', closeGalleryLightbox);
 
   galleryCarouselPrevButton?.addEventListener('click', () => {
     showGallerySlide(activeGallerySlideIndex - 1);
@@ -1027,7 +1090,6 @@ loadCompanyInfo();
 updateActiveSectionFallback();
 window.addEventListener('scroll', updateLogoSize, {passive: true});
 window.addEventListener('scroll', updateActiveSectionFallback, {passive: true});
-updateWhatsappFloatPosition();
 window.addEventListener('scroll', updateWhatsappFloatPosition, {passive: true});
 
 window.addEventListener('resize', updateLogoSize);

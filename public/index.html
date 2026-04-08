@@ -143,6 +143,24 @@
         </section>
     </main>
 
+    <div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true" role="dialog" aria-modal="true"
+        aria-label="Imagem ampliada da galeria">
+        <button class="gallery-lightbox__backdrop" id="gallery-lightbox-close" type="button"
+            aria-label="Fechar imagem ampliada"></button>
+
+        <div class="gallery-lightbox__dialog" role="document">
+            <button class="gallery-lightbox__dismiss" id="gallery-lightbox-dismiss" type="button"
+                aria-label="Fechar imagem ampliada">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <figure class="gallery-lightbox__figure">
+                <img class="gallery-lightbox__image" id="gallery-lightbox-image" alt="">
+                <figcaption class="gallery-lightbox__caption" id="gallery-lightbox-caption"></figcaption>
+            </figure>
+        </div>
+    </div>
+
     <div class="gallery-lightbox" id="partners-lightbox" aria-hidden="true" role="dialog" aria-modal="true"
         aria-label="Imagem ampliada de parceiros">
         <button class="gallery-lightbox__backdrop" id="partners-lightbox-close" type="button"
